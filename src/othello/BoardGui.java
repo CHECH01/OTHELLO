@@ -19,10 +19,10 @@ public class BoardGui extends JFrame{
 	private static final Color MY_GREEN = new Color (0,102,0);
 	private static final Color MY_BLUE = new Color (0,51,51);
 	private static final Color MY_WHITE = new Color (224,224,224);
-	
+	private int boardSize = 8;
 	private JPanel contentPane;
-	private JButton guiBoard [][] = new JButton [8][8];
-	private JLabel lbl[][] 		  = new JLabel[8][8];
+	private JButton guiBoard [][] = new JButton[boardSize][boardSize];
+	private JLabel lbl[][] 		  = new JLabel [boardSize][boardSize];
 	
 	private JLabel lblBlackDiscs = new JLabel("x2");
 	private JLabel lblWhiteDiscs = new JLabel("x2");
@@ -36,11 +36,12 @@ public class BoardGui extends JFrame{
 
 	private ImageIcon newGameIcon  = new ImageIcon("newGameBtn.png");
 
-	public BoardGui(Othello oth){
+	public BoardGui(Othello oth, int boardSize){
+		this.boardSize = boardSize;
 		setResizable(false);
 		setTitle("OTHELLO GAME");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(250, 60, 570, 700);
+		setBounds(250, 30, 570, 700);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -50,7 +51,7 @@ public class BoardGui extends JFrame{
 		JLayeredPane panel = new JLayeredPane();
 		panel.setBounds(30, 80, 500, 500);
 		contentPane.add(panel);
-		panel.setLayout(new GridLayout(8,8));
+		panel.setLayout(new GridLayout(boardSize,boardSize));
 		
 		JPanel panel2 = new JPanel();
 		panel2.setBounds(69, 580, 150, 70);
@@ -102,7 +103,6 @@ public class BoardGui extends JFrame{
 		
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
 				if(oth.isShowValidMoves()) {
 					oth.setShowValidMoves(false);
 					oth.hideValidMoves();
@@ -126,8 +126,8 @@ public class BoardGui extends JFrame{
 			
 		});
 		
-		for(int i = 0 ; i < 8;i++) {
-			for(int j = 0 ; j < 8;j++) {
+		for(int i = 0 ; i < boardSize;i++) {
+			for(int j = 0 ; j < boardSize;j++) {
 				guiBoard[i][j] = new JButton();
 				lbl[i][j] = new JLabel("");
 				guiBoard[i][j].add(lbl[i][j]);
@@ -150,9 +150,10 @@ public class BoardGui extends JFrame{
 		guiBoard[4][3].setIcon(blackIcon);
 		guiBoard[4][4].setIcon(whiteIcon);
 	}
+	
 	public void generateEmpytGuiBoard() {
-		for(int i = 0 ; i < 8;i++) {
-			for(int j = 0 ; j < 8;j++) {
+		for(int i = 0 ; i < boardSize;i++) {
+			for(int j = 0 ; j < boardSize;j++) {
 				guiBoard[i][j].setSize(10, 10);
 				guiBoard[i][j].setBackground(MY_GREEN);
 				guiBoard[i][j].setIcon(null);
@@ -177,6 +178,7 @@ public class BoardGui extends JFrame{
 	public ImageIcon getBlackIcon() {
 		return blackIcon;
 	}
+	
 	public void setDiscsValues(int whiteDiscs, int blackDiscs) {
 		lblBlackDiscs.setText("x"+blackDiscs);
 		lblWhiteDiscs.setText("x"+whiteDiscs);
@@ -185,15 +187,17 @@ public class BoardGui extends JFrame{
 	public ImageIcon getBlackOptionsIcon() {
 		return blackOptionsIcon;
 	}
+	
 	public ImageIcon getWhiteOptionsIcon() {
 		return whiteOptionsIcon;
 	}
+	
 	public void flip(int i, int j, ImageIcon icon,String txt,Color c) {
 		guiBoard[i][j].setIcon(icon);
 		lbl[i][j].setText(txt);
 		lbl[i][j].setForeground(c);
 	}
-
+	
 	public Object getIcon(int i, int j) {
 		return guiBoard[i][j].getIcon();
 	}

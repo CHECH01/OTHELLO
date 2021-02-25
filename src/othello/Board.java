@@ -3,11 +3,16 @@ package othello;
 import java.util.ArrayList;
 
 public class Board {
-	private int boardSize = 8;
-	private int size 	  = boardSize*boardSize;
-	
-	private String board[][] = new String[boardSize][boardSize];
+	private int boardSize;
+	private int arraySize;
+	private String board[][];
 	private ArrayList<String> positions = new ArrayList<String>();
+	
+	public Board(int boardSize) {
+		this.boardSize = boardSize;
+		arraySize  	   = boardSize*boardSize;
+		board  		   = new String[boardSize][boardSize];
+	}
 	
 	public void generateEmptyBoard() {
 		int k = 0;
@@ -28,7 +33,7 @@ public class Board {
 		
 	}
 	public void initializeArrayPositions() {
-		for (int i = 1; i <= size; i++)
+		for (int i = 1; i <= arraySize; i++)
 			positions.add(String.valueOf(i));
 	}
 	public void removeArrayPosition(String pos) {

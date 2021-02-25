@@ -7,30 +7,36 @@ import java.awt.EventQueue;
 import java.util.ArrayList;
 
 public class Othello {
-	private Board mainBoard 	= new Board();
-	private BoardGui guiBoard 	= new BoardGui(this);
+	private Board mainBoard;
+	private BoardGui guiBoard;
 	
-	private ArrayList<Integer> validMoves 	 = new ArrayList<Integer>();
-	private ArrayList<Integer> lastDiscRows 	 = new ArrayList<Integer>();
-	private ArrayList<Integer> lastDiscColumns = new ArrayList<Integer>();
-	private ArrayList<Integer> playerMovePosition   = new ArrayList<Integer>();
-	private ArrayList<Integer> auxiliar   = new ArrayList<Integer>();
+	private int boardSize;
+	
+	private ArrayList<Integer> validMoves 	 	  = new ArrayList<Integer>();
+	private ArrayList<Integer> lastDiscRows 	  = new ArrayList<Integer>();
+	private ArrayList<Integer> lastDiscColumns 	  = new ArrayList<Integer>();
+	private ArrayList<Integer> discsToFlipArray   = new ArrayList<Integer>();
+	private ArrayList<Integer> playerMovePosition = new ArrayList<Integer>();
 	
 	private static final String WHITE = "W";
 	private static final String BLACK = "B";
 	
-	private String board[][] = mainBoard.getBoard();
+	private String board[][];
 	private String currentPlayer;
 	
 	private boolean showValidMoves = false ;
 	
-	public boolean isShowValidMoves() {
-		return showValidMoves;
-	}
 	private int inputRow 	 	  = 0;
 	private int inputColumn  	  = 0;
 	private int directionsToFlip  = 0; 
 	private	int whiteDiscs = 2, blackDiscs = 2;
+	
+	public Othello(int boardSize) {
+		this.boardSize = boardSize;
+		mainBoard = new Board(boardSize);
+		guiBoard  = new BoardGui(this,boardSize);
+		board = mainBoard.getBoard();
+	}
 	
 	public void play() {
 		currentPlayer = BLACK;
@@ -44,13 +50,14 @@ public class Othello {
 		}
 		showGuiBoard();
 	}
+	
 	public void onClickMove(int i2,int j2) {
 		if(isValidMove(board[i2][j2])) {
 			validMoves.clear();
 			lastDiscRows.clear();
 			lastDiscColumns.clear();
 			playerMovePosition.clear();
-			auxiliar.clear();
+			discsToFlipArray.clear();
 			if(showValidMoves) {
 				hideValidMoves();
 			}
@@ -76,6 +83,7 @@ public class Othello {
 			directionsToFlip = 0;
 		}
 	}
+	
 	public boolean isValidMove(String position) {
 		boolean validMove = true;
 		for(int i = 0; i < validMoves.size() ; i++ ) {
@@ -95,6 +103,7 @@ public class Othello {
 		}
 		return validMove;
 	}
+	
 	public void flipDiscs() {
 		int cont = 0;
 		do {
@@ -102,6 +111,7 @@ public class Othello {
 			cont++;
 		}while(cont < directionsToFlip);
 	}
+	
 	public void flipDiscs(int position) {
 		int targetRow    = lastDiscRows.get(position);
 		int targetColumn = lastDiscColumns.get(position);
@@ -139,9 +149,10 @@ public class Othello {
 				}
 		}
 	}
+	
 	public void getValidMoves() {
-		for (int i = 0; i < 8; i++) {
-			for(int j = 0; j < 8; j++) {
+		for (int i = 0; i < boardSize; i++) {
+			for(int j = 0; j < boardSize; j++) {
 				if(board[i][j].contentEquals(currentPlayer)) {
 					getValidMoves(i,j,1,0);					
 					getValidMoves(i,j,-1,0);
@@ -155,6 +166,7 @@ public class Othello {
 			}
 		}
 	}
+	
 	public void getValidMoves(int i, int j, int jIncrement,int iIncrement) {
 		int row 		  = 0; 
 		int column 	 	  = 0; 
@@ -195,9 +207,10 @@ public class Othello {
 			lastDiscRows.add(i);
 			lastDiscColumns.add(j);
 			validMoves.add(Integer.parseInt(board[row][column]));
-			auxiliar.add(discsToFlip);
+			discsToFlipArray.add(discsToFlip);
 		}
 	}
+	
 	public void replay() {
 		directionsToFlip = 0;
 		whiteDiscs = 2;
@@ -211,14 +224,15 @@ public class Othello {
 		guiBoard.setDiscsValues(whiteDiscs, blackDiscs);
 		play();
 	}
+	
 	public void showValidMoves() {
 		int k = 0;
 		int aux = 0;
-		for(int i = 0; i < 8; i++) {
-			for(int j = 0; j < 8;j++) {
+		for(int i = 0; i < boardSize; i++) {
+			for(int j = 0; j < boardSize;j++) {
 				while(k < validMoves.size()) {										
 					if(board[i][j].contentEquals(String.valueOf(validMoves.get(k)))) {
-						aux += auxiliar.get(k);
+						aux += discsToFlipArray.get(k);
 						if(currentPlayer.contentEquals(BLACK)) {
 							guiBoard.flip(i,j, guiBoard.getBlackOptionsIcon(),String.valueOf(aux),Color.BLACK);
 						}else {
@@ -232,9 +246,10 @@ public class Othello {
 			}
 		}
 	}
+	
 	public void hideValidMoves() {
-		for(int i = 0; i < 8; i++) {
-			for(int j = 0; j < 8;j++) {
+		for(int i = 0; i < boardSize; i++) {
+			for(int j = 0; j < boardSize;j++) {
 				try {
 					if(guiBoard.getIcon(i,j).toString().contentEquals("whiteOptions.png") 
 							|| guiBoard.getIcon(i,j).toString().contentEquals("blackOptions.png")) {
@@ -244,6 +259,7 @@ public class Othello {
 			}
 		}
 	}
+	
 	public void showGuiBoard() {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -255,9 +271,10 @@ public class Othello {
 			}
 		});
 	}
+	
 	public boolean gameOver() {
-		for (int i = 0; i < 8; i++) {
-			for (int j = 0; j < 8; j++){
+		for (int i = 0; i < boardSize; i++) {
+			for (int j = 0; j < boardSize; j++){
 				if(!board[i][j].contentEquals(BLACK) && !board[i][j].contentEquals(WHITE)) {
 					return false;
 				}
@@ -265,6 +282,7 @@ public class Othello {
 		}
 		return true;
 	}
+	
 	public void getWinner() {
 		if(blackDiscs > whiteDiscs) {
 			JOptionPane.showMessageDialog(null, "BLACK WINS!");
@@ -273,6 +291,7 @@ public class Othello {
 		}else
 			JOptionPane.showMessageDialog(null, "It's a Draw.");
 	}
+	
 	public int compare(int firstValue, int secondValue, boolean type) {
 		int major = 0;
 		int minor = 0;
@@ -288,6 +307,7 @@ public class Othello {
 		else
 			return minor;
 	}
+	
 	public void discCount() {
 		whiteDiscs = 0;
 		blackDiscs = 0;
@@ -300,16 +320,18 @@ public class Othello {
 			}
 		}
 	}
+	
 	public void getCoordinates(String currentPos) {
 		first:
-		for (int i = 0; i < 8; i++)
-			for (int j = 0; j < 8; j++)
+		for (int i = 0; i < boardSize; i++)
+			for (int j = 0; j < boardSize; j++)
 				if (board[i][j].contentEquals(currentPos)) {
 					inputRow 	= i;
 					inputColumn  = j;
 					break first;
 				}
 	}
+	
 	public void switchPlayer() {
 		if(currentPlayer.contentEquals(WHITE) ) {
 			currentPlayer = BLACK;
@@ -317,7 +339,12 @@ public class Othello {
 			currentPlayer = WHITE;
 		}
 	}
+	
 	public void setShowValidMoves(boolean showValidMoves) {
 		this.showValidMoves = showValidMoves;
+	}
+	
+	public boolean isShowValidMoves() {
+		return showValidMoves;
 	}
 }
