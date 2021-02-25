@@ -21,15 +21,20 @@ public class Board {
 				board[i][j] = positions.get(k);
 				k++;
 			}
+		removeArrayPosition(board[3][3]);
 		board[3][3] = "W";
+		removeArrayPosition(board[3][4]);
 		board[3][4] = "B";
-		
+		removeArrayPosition(board[4][3]);
 		board[4][3] = "B";
+		removeArrayPosition(board[4][4]);
 		board[4][4] = "W";
+		/*
 		removeArrayPosition("28");
 		removeArrayPosition("29");
 		removeArrayPosition("36");
 		removeArrayPosition("37");
+		*/
 		
 	}
 	public void initializeArrayPositions() {

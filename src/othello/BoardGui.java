@@ -19,10 +19,10 @@ public class BoardGui extends JFrame{
 	private static final Color MY_GREEN = new Color (0,102,0);
 	private static final Color MY_BLUE = new Color (0,51,51);
 	private static final Color MY_WHITE = new Color (224,224,224);
-	private int boardSize = 8;
+	private int boardSize;
 	private JPanel contentPane;
-	private JButton guiBoard [][] = new JButton[boardSize][boardSize];
-	private JLabel lbl[][] 		  = new JLabel [boardSize][boardSize];
+	private JButton guiBoard [][];
+	private JLabel lbl[][];
 	
 	private JLabel lblBlackDiscs = new JLabel("x2");
 	private JLabel lblWhiteDiscs = new JLabel("x2");
@@ -38,6 +38,8 @@ public class BoardGui extends JFrame{
 
 	public BoardGui(Othello oth, int boardSize){
 		this.boardSize = boardSize;
+		guiBoard = new JButton[boardSize][boardSize];
+		lbl      = new JLabel [boardSize][boardSize];
 		setResizable(false);
 		setTitle("OTHELLO GAME");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
